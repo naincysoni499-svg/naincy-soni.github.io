@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Naincy Soni – Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050508;
+    --bg2: #0b0b12;
+    --bg3: #11111c;
+    --cyan: #00f5d4;
+    --violet: #9b5de5;
+    --amber: #ffc300;
+    --red: #ff4d6d;
+    --text: #e8e8f0;
+    --muted: #7070a0;
+    --border: rgba(0,245,212,0.15);
+    --glow: 0 0 24px rgba(0,245,212,0.25);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--cyan);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.1s ease;
+    mix-blend-mode: screen;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1.5px solid var(--cyan);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9998;
+    opacity: 0.5;
+    transition: all 0.18s ease;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--cyan); border-radius: 2px; }
+
+  /* Noise overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 900;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 48px;
+    backdrop-filter: blur(14px);
+    background: rgba(5,5,8,0.7);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 1rem;
+    color: var(--cyan);
+    letter-spacing: 0.1em;
+  }
+  .nav-links { display: flex; gap: 32px; }
+  .nav-links a {
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    font-family: 'Space Mono', monospace;
+  }
+  .nav-links a:hover { color: var(--cyan); }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 120px 48px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Animated grid bg */
+  #hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(rgba(0,245,212,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,245,212,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridMove 20s linear infinite;
+  }
+  @keyframes gridMove {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(60px); }
+  }
+
+  /* Radial glow orbs */
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    animation: orbFloat 8s ease-in-out infinite alternate;
+  }
+  .orb-1 { width: 500px; height: 500px; background: rgba(0,245,212,0.07); top: -100px; right: -100px; animation-delay: 0s; }
+  .orb-2 { width: 350px; height: 350px; background: rgba(155,93,229,0.08); bottom: 0; left: 10%; animation-delay: -3s; }
+  .orb-3 { width: 250px; height: 250px; background: rgba(255,195,0,0.05); top: 40%; right: 20%; animation-delay: -5s; }
+
+  @keyframes orbFloat {
+    0% { transform: translateY(0) scale(1); }
+    100% { transform: translateY(-30px) scale(1.05); }
+  }
+
+  .hero-content { position: relative; z-index: 2; max-width: 800px; }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(0,245,212,0.08);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--cyan);
+    letter-spacing: 0.1em;
+    margin-bottom: 28px;
+    animation: fadeUp 0.8s ease both;
+  }
+  .badge-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--cyan);
+    animation: pulse 2s ease infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+
+  h1 {
+    font-size: clamp(3rem, 7vw, 6rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    animation: fadeUp 0.8s 0.1s ease both;
+  }
+  h1 .line-1 { display: block; color: var(--text); }
+  h1 .line-2 {
+    display: block;
+    background: linear-gradient(135deg, var(--cyan), var(--violet));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-tagline {
+    margin-top: 20px;
+    font-size: 1.05rem;
+    color: var(--muted);
+    max-width: 520px;
+    line-height: 1.7;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+
+  .hero-contacts {
+    margin-top: 32px;
+    display: flex; flex-wrap: wrap; gap: 16px;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+  .contact-chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 9px 18px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg3);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text);
+    text-decoration: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .contact-chip:hover { border-color: var(--cyan); box-shadow: var(--glow); }
+  .contact-chip svg { width: 14px; height: 14px; color: var(--cyan); fill: var(--cyan); }
+
+  .hero-cta {
+    margin-top: 40px;
+    animation: fadeUp 0.8s 0.4s ease both;
+  }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 32px;
+    background: var(--cyan);
+    color: #050508;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,245,212,0.35); }
+
+  /* scroll indicator */
+  .scroll-hint {
+    position: absolute;
+    bottom: 36px; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    animation: fadeUp 1s 1s ease both;
+  }
+  .scroll-line {
+    width: 1px; height: 48px;
+    background: linear-gradient(to bottom, var(--cyan), transparent);
+    animation: scrollDown 2s ease-in-out infinite;
+  }
+  @keyframes scrollDown { 0%,100%{transform:scaleY(1);opacity:1} 50%{transform:scaleY(0.5);opacity:0.5} }
+
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(24px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  /* ── SECTION COMMON ── */
+  section { padding: 100px 48px; position: relative; }
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--cyan);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, var(--border), transparent);
+  }
+  .section-title {
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 56px;
+  }
+
+  /* ── ABOUT / 3 PILLARS ── */
+  #about { background: var(--bg2); }
+  .pillars {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .pillar {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px 32px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    animation: fadeUp 0.7s ease both;
+  }
+  .pillar:hover { transform: translateY(-6px); box-shadow: 0 16px 48px rgba(0,245,212,0.1); }
+  .pillar::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .pillar-1::before { background: linear-gradient(90deg, var(--cyan), transparent); }
+  .pillar-2::before { background: linear-gradient(90deg, var(--violet), transparent); }
+  .pillar-3::before { background: linear-gradient(90deg, var(--amber), transparent); }
+
+  .pillar-icon {
+    width: 56px; height: 56px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+  }
+  .pillar-1 .pillar-icon { background: rgba(0,245,212,0.1); }
+  .pillar-2 .pillar-icon { background: rgba(155,93,229,0.1); }
+  .pillar-3 .pillar-icon { background: rgba(255,195,0,0.1); }
+
+  .pillar h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .pillar-1 h3 { color: var(--cyan); }
+  .pillar-2 h3 { color: var(--violet); }
+  .pillar-3 h3 { color: var(--amber); }
+
+  .pillar p {
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.75;
+  }
+
+  /* floating code decorations */
+  .code-float {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: rgba(0,245,212,0.18);
+    position: absolute;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  /* ── SKILLS ── */
+  #skills { background: var(--bg); }
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+  }
+  .skill-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    display: flex; align-items: center; gap: 16px;
+    transition: transform 0.25s, border-color 0.25s;
+    animation: fadeUp 0.6s ease both;
+  }
+  .skill-card:hover { transform: translateX(6px); border-color: var(--cyan); }
+  .skill-icon {
+    width: 44px; height: 44px;
+    background: rgba(0,245,212,0.08);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+  .skill-name {
+    font-weight: 600;
+    font-size: 0.92rem;
+  }
+  .skill-level {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--cyan);
+    letter-spacing: 0.08em;
+    margin-top: 3px;
+  }
+
+  /* ── PROJECTS ── */
+  #projects { background: var(--bg2); }
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 28px;
+  }
+  .project-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    animation: fadeUp 0.7s ease both;
+  }
+  .project-card:hover { transform: translateY(-8px); box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+  .project-header {
+    padding: 28px 28px 20px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .project-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--cyan);
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+  .project-header h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+  }
+  .project-accent {
+    position: absolute;
+    top: 0; right: 0;
+    width: 80px; height: 80px;
+    border-radius: 0 16px 0 80px;
+    opacity: 0.12;
+  }
+  .pa-1 { background: var(--cyan); }
+  .pa-2 { background: var(--violet); }
+  .pa-3 { background: var(--amber); }
+
+  .project-body { padding: 20px 28px 24px; }
+  .project-body ul { list-style: none; }
+  .project-body ul li {
+    font-size: 0.87rem;
+    color: var(--muted);
+    line-height: 1.7;
+    padding-left: 16px;
+    position: relative;
+  }
+  .project-body ul li::before {
+    content: '›';
+    position: absolute; left: 0;
+    color: var(--cyan);
+  }
+  .project-tags {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-top: 16px;
+  }
+  .tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    padding: 4px 10px;
+    border-radius: 4px;
+    letter-spacing: 0.05em;
+  }
+  .tag-c { background: rgba(0,245,212,0.1); color: var(--cyan); }
+  .tag-ds { background: rgba(155,93,229,0.1); color: var(--violet); }
+  .tag-fh { background: rgba(255,195,0,0.1); color: var(--amber); }
+  .tag-algo { background: rgba(255,77,109,0.1); color: var(--red); }
+
+  /* ── CERTIFICATIONS ── */
+  #certifications { background: var(--bg); }
+  .certs-row { display: flex; gap: 24px; flex-wrap: wrap; }
+  .cert-card {
+    flex: 1; min-width: 260px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px 24px;
+    display: flex; align-items: flex-start; gap: 18px;
+    transition: border-color 0.25s, transform 0.25s;
+    animation: fadeUp 0.7s ease both;
+  }
+  .cert-card:hover { border-color: var(--violet); transform: translateY(-4px); }
+  .cert-badge {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    background: rgba(155,93,229,0.12);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+  }
+  .cert-info h4 { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
+  .cert-info span {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--violet);
+    letter-spacing: 0.06em;
+  }
+
+  /* ── EDUCATION ── */
+  #education { background: var(--bg2); }
+  .edu-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px;
+    display: flex; align-items: flex-start; gap: 32px;
+    max-width: 700px;
+    animation: fadeUp 0.7s ease both;
+    transition: box-shadow 0.3s;
+  }
+  .edu-card:hover { box-shadow: 0 0 40px rgba(0,245,212,0.08); }
+  .edu-icon {
+    width: 64px; height: 64px;
+    background: rgba(0,245,212,0.08);
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem;
+    flex-shrink: 0;
+  }
+  .edu-info h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 6px; }
+  .edu-uni {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--cyan);
+    letter-spacing: 0.06em;
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+  .edu-info p { font-size: 0.85rem; color: var(--muted); }
+
+  /* ── STRENGTHS ── */
+  #strengths { background: var(--bg); }
+  .strengths-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+  }
+  .strength-item {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    display: flex; align-items: center; gap: 12px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    transition: border-color 0.2s, transform 0.2s;
+    animation: fadeUp 0.6s ease both;
+  }
+  .strength-item:hover { border-color: var(--amber); transform: scale(1.02); }
+  .strength-item span:first-child { font-size: 1.1rem; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    padding: 56px 48px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 24px;
+  }
+  .footer-name {
+    font-size: 1.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--cyan), var(--violet));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .footer-links { display: flex; gap: 20px; }
+  .footer-links a {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--cyan); }
+  .footer-copy {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── SECTION DIVIDER ── */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 0 48px;
+  }
+
+  /* ── INTERSECTION OBSERVER animations ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    .nav-links { gap: 16px; }
+    section { padding: 70px 24px; }
+    #hero { padding: 100px 24px 70px; }
+    .pillars { grid-template-columns: 1fr; }
+    footer { padding: 40px 24px; flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Custom cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">NS.dev</div>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects">Projects</a>
+    <a href="#certifications">Certs</a>
+    <a href="#education">Education</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      Open to Internships &amp; Opportunities
+    </div>
+
+    <h1>
+      <span class="line-1">Naincy</span>
+      <span class="line-2">Soni</span>
+    </h1>
+
+    <p class="hero-tagline">
+      B.Tech Computer Science student passionate about crafting efficient solutions through <strong style="color:var(--cyan)">C/C++ programming</strong>, understanding <strong style="color:var(--violet)">Linux systems</strong>, and sharpening <strong style="color:var(--amber)">problem-solving skills</strong> one algorithm at a time.
+    </p>
+
+    <div class="hero-contacts">
+      <a class="contact-chip" href="tel:+918826414207">
+        <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.15 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+        +91 8826414207
+      </a>
+      <a class="contact-chip" href="mailto:naincysoni499@gmail.com">
+        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        naincysoni499@gmail.com
+      </a>
+      <a class="contact-chip" href="https://www.linkedin.com/in/naincy-soni-7bb641406" target="_blank">
+        <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        LinkedIn
+      </a>
+    </div>
+
+    <div class="hero-cta">
+      <a class="btn-primary" href="mailto:naincysoni499@gmail.com">
+        💼 Hire Me
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ABOUT / 3 PILLARS -->
+<section id="about">
+  <div class="section-label">Core Focus</div>
+  <h2 class="section-title">Three Pillars of <span style="color:var(--cyan)">Expertise</span></h2>
+
+  <div class="pillars">
+    <div class="pillar pillar-1 reveal">
+      <div class="pillar-icon">⚙️</div>
+      <h3>C / C++ Programming</h3>
+      <p>Proficient in structured and object-oriented programming paradigms. Built real-world applications including student and library management systems using C. Focused on writing clean, efficient, and maintainable code with an eye for performance.</p>
+      <div class="code-float" style="bottom:16px;right:20px;font-size:2.5rem;opacity:0.05">{ }</div>
+    </div>
+    <div class="pillar pillar-2 reveal" style="animation-delay:0.1s">
+      <div class="pillar-icon">🐧</div>
+      <h3>Linux Basics</h3>
+      <p>Comfortable working in Linux environments — navigating the file system, managing permissions, executing shell commands, and understanding process management. Certified through Coursera's Linux Basics program.</p>
+      <div class="code-float" style="bottom:16px;right:20px;font-size:2.5rem;opacity:0.05">$_</div>
+    </div>
+    <div class="pillar pillar-3 reveal" style="animation-delay:0.2s">
+      <div class="pillar-icon">🧩</div>
+      <h3>Problem Solving</h3>
+      <p>Consistent algorithmic thinking through implementation of searching and sorting algorithms — Linear Search, Binary Search, Bubble Sort, and Selection Sort. Driven by curiosity and a growth mindset to tackle increasingly complex challenges.</p>
+      <div class="code-float" style="bottom:16px;right:20px;font-size:2.5rem;opacity:0.05">O(n)</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-label">Technical Stack</div>
+  <h2 class="section-title">Skills &amp; <span style="color:var(--cyan)">Technologies</span></h2>
+
+  <div class="skills-grid">
+    <div class="skill-card reveal" style="animation-delay:0s">
+      <div class="skill-icon">⚙️</div>
+      <div>
+        <div class="skill-name">C Programming</div>
+        <div class="skill-level">■■■■□ PROFICIENT</div>
+      </div>
+    </div>
+    <div class="skill-card reveal" style="animation-delay:0.05s">
+      <div class="skill-icon">➕</div>
+      <div>
+        <div class="skill-name">C++ Programming</div>
+        <div class="skill-level">■■■□□ LEARNING</div>
+      </div>
+    </div>
+    <div class="skill-card reveal" style="animation-delay:0.1s">
+      <div class="skill-icon">🗂️</div>
+      <div>
+        <div class="skill-name">Data Structures</div>
+        <div class="skill-level">■■■□□ FOUNDATIONAL</div>
+      </div>
+    </div>
+    <div class="skill-card reveal" style="animation-delay:0.15s">
+      <div class="skill-icon">🐧</div>
+      <div>
+        <div class="skill-name">Linux Basics</div>
+        <div class="skill-level">■■■□□ CERTIFIED</div>
+      </div>
+    </div>
+    <div class="skill-card reveal" style="animation-delay:0.2s">
+      <div class="skill-icon">🔍</div>
+      <div>
+        <div class="skill-name">Searching Algorithms</div>
+        <div class="skill-level">■■■■□ PROFICIENT</div>
+      </div>
+    </div>
+    <div class="skill-card reveal" style="animation-delay:0.25s">
+      <div class="skill-icon">📊</div>
+      <div>
+        <div class="skill-name">Sorting Algorithms</div>
+        <div class="skill-level">■■■■□ PROFICIENT</div>
+      </div>
+    </div>
+    <div class="skill-card reveal" style="animation-delay:0.3s">
+      <div class="skill-icon">🗃️</div>
+      <div>
+        <div class="skill-name">File Handling (C)</div>
+        <div class="skill-level">■■■□□ COMFORTABLE</div>
+      </div>
+    </div>
+    <div class="skill-card reveal" style="animation-delay:0.35s">
+      <div class="skill-icon">📝</div>
+      <div>
+        <div class="skill-name">MS Word &amp; PowerPoint</div>
+        <div class="skill-level">■■■■□ COMPETENT</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-label">Work</div>
+  <h2 class="section-title">Academic <span style="color:var(--cyan)">Projects</span></h2>
+
+  <div class="projects-grid">
+    <!-- Project 1 -->
+    <div class="project-card reveal">
+      <div class="project-header">
+        <div class="project-accent pa-1"></div>
+        <div class="project-num">PROJECT 01</div>
+        <h3>Student Management System</h3>
+      </div>
+      <div class="project-body">
+        <ul>
+          <li>Developed a menu-driven application in C with intuitive navigation</li>
+          <li>Implemented CRUD operations: add, delete, search &amp; update student records</li>
+          <li>Applied structured programming concepts and input validation</li>
+        </ul>
+        <div class="project-tags">
+          <span class="tag tag-c">C Language</span>
+          <span class="tag tag-ds">Structs</span>
+          <span class="tag tag-fh">File I/O</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 2 -->
+    <div class="project-card reveal" style="animation-delay:0.1s">
+      <div class="project-header">
+        <div class="project-accent pa-2"></div>
+        <div class="project-num">PROJECT 02</div>
+        <h3>Library Management System</h3>
+      </div>
+      <div class="project-body">
+        <ul>
+          <li>Console-based library management system built in C</li>
+          <li>Used structures and file handling for persistent record storage</li>
+          <li>Implemented book issue, return and inventory tracking features</li>
+        </ul>
+        <div class="project-tags">
+          <span class="tag tag-c">C Language</span>
+          <span class="tag tag-ds">Structs</span>
+          <span class="tag tag-fh">File Handling</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 3 -->
+    <div class="project-card reveal" style="animation-delay:0.2s">
+      <div class="project-header">
+        <div class="project-accent pa-3"></div>
+        <div class="project-num">PROJECT 03</div>
+        <h3>Searching &amp; Sorting Suite</h3>
+      </div>
+      <div class="project-body">
+        <ul>
+          <li>Implemented Linear Search and Binary Search from scratch</li>
+          <li>Coded Bubble Sort and Selection Sort with step-by-step tracing</li>
+          <li>Analyzed time complexity and best/worst case scenarios</li>
+        </ul>
+        <div class="project-tags">
+          <span class="tag tag-c">C Language</span>
+          <span class="tag tag-algo">Algorithms</span>
+          <span class="tag tag-ds">DSA</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CERTIFICATIONS -->
+<section id="certifications">
+  <div class="section-label">Credentials</div>
+  <h2 class="section-title">Certifications</h2>
+  <div class="certs-row">
+    <div class="cert-card reveal">
+      <div class="cert-badge">🏅</div>
+      <div class="cert-info">
+        <h4>Introduction to C Programming</h4>
+        <span>GREAT LEARNING</span>
+        <p style="font-size:0.8rem;color:var(--muted);margin-top:6px">Foundational C programming concepts, syntax, and problem-solving through hands-on exercises.</p>
+      </div>
+    </div>
+    <div class="cert-card reveal" style="animation-delay:0.1s">
+      <div class="cert-badge">🏅</div>
+      <div class="cert-info">
+        <h4>Linux Basics</h4>
+        <span>COURSERA</span>
+        <p style="font-size:0.8rem;color:var(--muted);margin-top:6px">Shell navigation, file system management, permissions, and essential Linux command-line tools.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="section-label">Academic Background</div>
+  <h2 class="section-title">Education</h2>
+  <div class="edu-card reveal">
+    <div class="edu-icon">🎓</div>
+    <div class="edu-info">
+      <h3>Bachelor of Technology – Computer Science</h3>
+      <div class="edu-uni">MANAV RACHNA INTERNATIONAL INSTITUTE<br>OF RESEARCH AND STUDIES</div>
+      <p>Currently pursuing B.Tech in Computer Science, building strong foundations in algorithms, data structures, systems programming, and software development principles.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- STRENGTHS -->
+<section id="strengths">
+  <div class="section-label">Personal Traits</div>
+  <h2 class="section-title">Strengths &amp; <span style="color:var(--amber)">Languages</span></h2>
+  <div class="strengths-list">
+    <div class="strength-item reveal"><span>⚡</span> Quick Learner</div>
+    <div class="strength-item reveal" style="animation-delay:0.05s"><span>🧠</span> Consistent Problem Solver</div>
+    <div class="strength-item reveal" style="animation-delay:0.1s"><span>🤝</span> Team Player</div>
+    <div class="strength-item reveal" style="animation-delay:0.15s"><span>💬</span> Strong Communicator</div>
+    <div class="strength-item reveal" style="animation-delay:0.2s"><span>🚀</span> Tech Enthusiast</div>
+    <div class="strength-item reveal" style="animation-delay:0.25s"><span>🇬🇧</span> English</div>
+    <div class="strength-item reveal" style="animation-delay:0.3s"><span>🇮🇳</span> Hindi</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="footer-name">Naincy Soni</div>
+    <div style="font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--muted);margin-top:6px">B.Tech CS · MRIIRS · Delhi, India</div>
+  </div>
+  <div class="footer-links">
+    <a href="mailto:naincysoni499@gmail.com">Email</a>
+    <a href="tel:+918826414207">Call</a>
+    <a href="https://www.linkedin.com/in/naincy-soni-7bb641406" target="_blank">LinkedIn</a>
+  </div>
+  <div class="footer-copy">© 2025 Naincy Soni. Built with passion.</div>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const cursorRing = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.transform = `translate(${mx - 6}px, ${my - 6}px)`;
+  });
+
+  function animateRing() {
+    rx += (mx - rx - 18) * 0.12;
+    ry += (my - ry - 18) * 0.12;
+    cursorRing.style.transform = `translate(${rx}px, ${ry}px)`;
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  document.querySelectorAll('a, button, .pillar, .project-card, .skill-card').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.transform += ' scale(2)';
+      cursorRing.style.opacity = '0.8';
+      cursorRing.style.borderColor = 'var(--cyan)';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursorRing.style.opacity = '0.5';
+      cursorRing.style.borderColor = 'var(--cyan)';
+    });
+  });
+
+  // Intersection Observer for reveal animations
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  revealEls.forEach(el => observer.observe(el));
+
+  // Typewriter effect on hero tagline
+  const tagline = document.querySelector('.hero-tagline');
+  const originalHTML = tagline.innerHTML;
+  // Just fade it in with CSS; already handled
+
+  // Add floating code snippets to hero dynamically
+  const snippets = ['#include<stdio.h>', 'int main(){', 'printf("Hello");', 'return 0; }', 'ls -la', 'gcc main.c', './a.out', 'O(log n)'];
+  const hero = document.getElementById('hero');
+  snippets.forEach((s, i) => {
+    const el = document.createElement('div');
+    el.className = 'code-float';
+    el.textContent = s;
+    el.style.cssText = `
+      top: ${15 + (i * 10)}%;
+      right: ${5 + (i % 3) * 12}%;
+      font-size: 0.7rem;
+      animation: orbFloat ${6 + i}s ease-in-out infinite alternate;
+      animation-delay: ${-i * 0.5}s;
+    `;
+    hero.appendChild(el);
+  });
+</script>
+</body>
+</html>
